@@ -1,0 +1,30 @@
+name: Daily Stock Report
+
+on:
+  schedule:
+    - cron: "0 8 * * *"  # Tous les jours à 08h UTC (10h en France)
+  workflow_dispatch:  # Permet de lancer manuellement
+
+jobs:
+  scrape-and-email:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run script
+        env:
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_SENDER: "ton.email@gmail.com"
+          EMAIL_RECEIVER: "boursemails@gmail.com"
+        run: |
+          python main.py
