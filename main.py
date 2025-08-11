@@ -38,19 +38,22 @@ def scrape_all_pages():
         try:
             r = requests.get(url, params=PARAMS, timeout=10)
         except Exception as e:
-            print(f"⚠ Erreur de connexion : {e}")
+            print(f"⚠ Erreur de connexion HTTP : {e}")
             break
 
         if r.status_code != 200:
+            print(f"⚠ HTTP {r.status_code} - arrêt du scraping.")
             break
 
         soup = BeautifulSoup(r.text, "lxml")
         table = soup.find("table")
         if not table:
+            print("⚠ Pas de tableau trouvé - fin.")
             break
 
         rows = table.find_all("tr")[1:]  # skip header
         if not rows:
+            print("⚠ Aucune ligne trouvée - fin.")
             break
 
         for row in rows:
@@ -64,6 +67,7 @@ def scrape_all_pages():
         page += 1
         time.sleep(1)  # éviter de spammer le serveur
 
+    print(f"✅ Scraping terminé - {len(results)} lignes trouvées.")
     return results
 
 def send_email(data):
@@ -82,18 +86,24 @@ def send_email(data):
     msg.attach(MIMEText(body, "html"))
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        print("📨 Connexion à Gmail...")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as server:
+            print("🔑 Authentification...")
             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            print("✉ Envoi du mail...")
             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
         print("✅ Email envoyé avec succès.")
-    except smtplib.SMTPAuthenticationError:
-        print("❌ Erreur d'authentification Gmail. Vérifie ton mot de passe d'application et l'adresse email.")
+    except smtplib.SMTPAuthenticationError as e:
+        print("❌ Erreur d'authentification Gmail.")
+        print(f"Détails : {e}")
     except Exception as e:
         print(f"⚠ Erreur lors de l'envoi de l'email : {e}")
 
 if __name__ == "__main__":
+    print("🚀 Lancement du script...")
     data = scrape_all_pages()
     if data:
         send_email(data)
     else:
         print("⚠ Aucune donnée trouvée.")
+
