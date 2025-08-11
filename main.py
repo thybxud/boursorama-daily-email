@@ -6,7 +6,7 @@ from email.mime.multipart import MIMEMultipart
 import time
 
 # Configuration e-mail
-EMAIL_SENDER = "ton.email@gmail.com"
+EMAIL_SENDER = "boursemails@gmail.com"
 EMAIL_RECEIVER = "boursemails@gmail.com"
 EMAIL_PASSWORD = "APP_PASSWORD_GMAIL"  # sera remplacé par un secret GitHub
 
