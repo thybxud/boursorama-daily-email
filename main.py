@@ -8,7 +8,7 @@ import time
 # Configuration e-mail
 EMAIL_SENDER = "boursemails@gmail.com"
 EMAIL_RECEIVER = "boursemails@gmail.com"
-EMAIL_PASSWORD = "APP_PASSWORD_GMAIL"  # sera remplacé par un secret GitHub
+EMAIL_PASSWORD = "zkbq tprd qmnb qzkz"  
 
 # URL de base
 BASE_URL = "https://www.boursorama.com/bourse/actions/consensus/recommandations-paris/"
